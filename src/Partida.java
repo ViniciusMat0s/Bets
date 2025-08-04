@@ -58,7 +58,6 @@ public class Partida {
     public void exibirEstatisticasCompletas() {
         System.out.println("\n--- Estatísticas Completas do Jogo ---");
         if (primeiroTempoTime1 != null && segundoTempoTime1 != null) {
-            // Soma de Chutes, Gols, Escanteios
             int totalChutesTime1 = primeiroTempoTime1.getChutes() + segundoTempoTime1.getChutes();
             int totalChutesTime2 = primeiroTempoTime2.getChutes() + segundoTempoTime2.getChutes();
 
@@ -71,10 +70,8 @@ public class Partida {
             int totalGolsTime1 = primeiroTempoTime1.getGols() + segundoTempoTime1.getGols();
             int totalGolsTime2 = primeiroTempoTime2.getGols() + segundoTempoTime2.getGols();
 
-            // Lógica para "Ambos Marcam"
             String ambosMarcamStatus = (totalGolsTime1 > 0 && totalGolsTime2 > 0) ? "Sim" : "Não";
 
-            // Posse de Bola Média
             double posseMediaTime1 = (primeiroTempoTime1.getPosse() + segundoTempoTime1.getPosse()) / 2.0;
             double posseMediaTime2 = (primeiroTempoTime2.getPosse() + segundoTempoTime2.getPosse()) / 2.0;
 
@@ -90,5 +87,115 @@ public class Partida {
         } else {
             System.out.println("Não foi possível exibir as estatísticas completas. Dados insuficientes.");
         }
+    }
+
+    public void analisarPartida() {
+        System.out.println("\n--- Análise Detalhada da Partida ---");
+        if (primeiroTempoTime1 == null || segundoTempoTime1 == null) {
+            System.out.println("Dados insuficientes para análise.");
+            return;
+        }
+
+        // Análise de Gols e Escanteios... (código anterior não alterado)
+        System.out.println("\nAnálise de Gols:");
+        String vencedor1Tempo = (primeiroTempoTime1.getGols() > primeiroTempoTime2.getGols()) ? time1.getNome() : time2.getNome();
+        if (primeiroTempoTime1.getGols().equals(primeiroTempoTime2.getGols())) {
+            System.out.println("Primeiro tempo: Empate em gols.");
+        } else {
+            System.out.println("Primeiro tempo: " + vencedor1Tempo + " teve mais gols.");
+        }
+
+        String vencedor2Tempo = (segundoTempoTime1.getGols() > segundoTempoTime2.getGols()) ? time1.getNome() : time2.getNome();
+        if (segundoTempoTime1.getGols().equals(segundoTempoTime2.getGols())) {
+            System.out.println("Segundo tempo: Empate em gols.");
+        } else {
+            System.out.println("Segundo tempo: " + vencedor2Tempo + " teve mais gols.");
+        }
+
+        System.out.println("\nAnálise de Escanteios:");
+        String vencedorEscanteios1T = (primeiroTempoTime1.getEscanteios() > primeiroTempoTime2.getEscanteios()) ? time1.getNome() : time2.getNome();
+        if (primeiroTempoTime1.getEscanteios().equals(primeiroTempoTime2.getEscanteios())) {
+            System.out.println("Primeiro tempo: Empate em escanteios.");
+        } else {
+            System.out.println("Primeiro tempo: " + vencedorEscanteios1T + " teve mais escanteios.");
+        }
+
+        String vencedorEscanteios2T = (segundoTempoTime1.getEscanteios() > segundoTempoTime2.getEscanteios()) ? time1.getNome() : time2.getNome();
+        if (segundoTempoTime1.getEscanteios().equals(segundoTempoTime2.getEscanteios())) {
+            System.out.println("Segundo tempo: Empate em escanteios.");
+        } else {
+            System.out.println("Segundo tempo: " + vencedorEscanteios2T + " teve mais escanteios.");
+        }
+
+        int totalEscanteios1 = primeiroTempoTime1.getEscanteios() + segundoTempoTime1.getEscanteios();
+        int totalEscanteios2 = primeiroTempoTime2.getEscanteios() + segundoTempoTime2.getEscanteios();
+        String vencedorEscanteiosTotal = (totalEscanteios1 > totalEscanteios2) ? time1.getNome() : time2.getNome();
+        if (totalEscanteios1 == totalEscanteios2) {
+            System.out.println("Na partida: Empate em escanteios.");
+        } else {
+            System.out.println("Na partida: " + vencedorEscanteiosTotal + " teve mais escanteios.");
+        }
+
+
+        // NOVO CÓDIGO PARA COMPARAÇÃO DE EFICÁCIA E CONVERSÃO
+        System.out.println("\n--- Comparativo de Eficácia de Ataque ---");
+        // Análise para o Time 1
+        double eficacia1T_T1 = calcularEficacia(primeiroTempoTime1.getChutes(), primeiroTempoTime1.getChutesGol());
+        double eficacia2T_T1 = calcularEficacia(segundoTempoTime1.getChutes(), segundoTempoTime1.getChutesGol());
+        if (eficacia1T_T1 > eficacia2T_T1) {
+            System.out.printf("%s teve um ataque mais eficaz no primeiro tempo (%.2f%%) do que no segundo (%.2f%%).\n", time1.getNome(), eficacia1T_T1, eficacia2T_T1);
+        } else if (eficacia2T_T1 > eficacia1T_T1) {
+            System.out.printf("%s teve um ataque mais eficaz no segundo tempo (%.2f%%) do que no primeiro (%.2f%%).\n", time1.getNome(), eficacia2T_T1, eficacia1T_T1);
+        } else {
+            System.out.printf("%s teve a mesma eficácia de ataque em ambos os tempos (%.2f%%).\n", time1.getNome(), eficacia1T_T1);
+        }
+
+        // Análise para o Time 2
+        double eficacia1T_T2 = calcularEficacia(primeiroTempoTime2.getChutes(), primeiroTempoTime2.getChutesGol());
+        double eficacia2T_T2 = calcularEficacia(segundoTempoTime2.getChutes(), segundoTempoTime2.getChutesGol());
+        if (eficacia1T_T2 > eficacia2T_T2) {
+            System.out.printf("%s teve um ataque mais eficaz no primeiro tempo (%.2f%%) do que no segundo (%.2f%%).\n", time2.getNome(), eficacia1T_T2, eficacia2T_T2);
+        } else if (eficacia2T_T2 > eficacia1T_T2) {
+            System.out.printf("%s teve um ataque mais eficaz no segundo tempo (%.2f%%) do que no primeiro (%.2f%%).\n", time2.getNome(), eficacia2T_T2, eficacia1T_T2);
+        } else {
+            System.out.printf("%s teve a mesma eficácia de ataque em ambos os tempos (%.2f%%).\n", time2.getNome(), eficacia1T_T2);
+        }
+
+        System.out.println("\n--- Análise de Conversão de Chutes a Gol ---");
+        // Análise para o Time 1
+        double conversao1T_T1 = calcularConversao(primeiroTempoTime1.getChutesGol(), primeiroTempoTime1.getGols());
+        double conversao2T_T1 = calcularConversao(segundoTempoTime1.getChutesGol(), segundoTempoTime1.getGols());
+        if (conversao1T_T1 > conversao2T_T1) {
+            System.out.printf("%s converteu mais chutes a gol no primeiro tempo (%.2f%%) do que no segundo (%.2f%%).\n", time1.getNome(), conversao1T_T1, conversao2T_T1);
+        } else if (conversao2T_T1 > conversao1T_T1) {
+            System.out.printf("%s converteu mais chutes a gol no segundo tempo (%.2f%%) do que no primeiro (%.2f%%).\n", time1.getNome(), conversao2T_T1, conversao1T_T1);
+        } else {
+            System.out.printf("%s teve a mesma conversão de chutes a gol em ambos os tempos (%.2f%%).\n", time1.getNome(), conversao1T_T1);
+        }
+
+        // Análise para o Time 2
+        double conversao1T_T2 = calcularConversao(primeiroTempoTime2.getChutesGol(), primeiroTempoTime2.getGols());
+        double conversao2T_T2 = calcularConversao(segundoTempoTime2.getChutesGol(), segundoTempoTime2.getGols());
+        if (conversao1T_T2 > conversao2T_T2) {
+            System.out.printf("%s converteu mais chutes a gol no primeiro tempo (%.2f%%) do que no segundo (%.2f%%).\n", time2.getNome(), conversao1T_T2, conversao2T_T2);
+        } else if (conversao2T_T2 > conversao1T_T2) {
+            System.out.printf("%s converteu mais chutes a gol no segundo tempo (%.2f%%) do que no primeiro (%.2f%%).\n", time2.getNome(), conversao2T_T2, conversao1T_T2);
+        } else {
+            System.out.printf("%s teve a mesma conversão de chutes a gol em ambos os tempos (%.2f%%).\n", time2.getNome(), conversao1T_T2);
+        }
+    }
+
+    private double calcularEficacia(int totalChutes, int chutesGol) {
+        if (totalChutes > 0) {
+            return (double) chutesGol / totalChutes * 100;
+        }
+        return 0.0;
+    }
+
+    private double calcularConversao(int chutesGol, int gols) {
+        if (chutesGol > 0) {
+            return (double) gols / chutesGol * 100;
+        }
+        return 0.0;
     }
 }
